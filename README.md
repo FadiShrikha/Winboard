@@ -1,9 +1,12 @@
 **this is Winboard, a text corrector, an application for windows** 
 
 **What Does it Do exactly**
+
 . it displays a wonderful layout that contains three main section and a clipboard button, every section contain a 
   single word that works one knowing the possible word you try to type in any text box .
+  
 . along the three sections , the app has a button for clipboard, that helps you save as many copies from text and images as wanted and pasting them again .
+
 . it serve the same as you Gboard and IOS Keyboard
 
 . it have a hot-key (W + Alt) , so you could turn it off and on .
