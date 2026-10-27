@@ -1,16 +1,14 @@
-﻿using Microsoft.VisualBasic;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 
 public class Scale
-  {
+{
 
-    
+
     public class Answersblock
     {
-        public (string,float) Completion { get; set; }
+        public (string, float) Completion { get; set; }
 
         public (string, float) SecondaryCompletion { get; set; }
         public (string, float) TriCompletion { get; set; }
@@ -24,7 +22,7 @@ public class Scale
     Answersblock CreateBlock = new();
 
 
-    public Answersblock answersblock( int Currentstate, List<(string, float)> NgramProbabiltities, string CurrentWord = "", List<(string, float)> LevenshteinProbabiltities = null)
+    public Answersblock answersblock(int Currentstate, List<(string, float)> NgramProbabiltities, string CurrentWord = "", List<(string, float)> LevenshteinProbabiltities = null)
     {
 
 
@@ -44,7 +42,7 @@ public class Scale
 
         else if (Currentstate == 3)
         {
-    
+
 
             LevenshteinProbabiltities.OrderByDescending(f => f.Item2);
             DeleteRepetitions(LevenshteinProbabiltities);
@@ -53,8 +51,8 @@ public class Scale
             List<(string, float)> mostPb = MostProbable(LevenshteinProbabiltities, NgramProbabiltities, CurrentWord);
 
 
-           
-            CreateBlock.Correction =  NgramProbabiltities.Count >=1  ? NgramProbabiltities[0] : ("",0);
+
+            CreateBlock.Correction = NgramProbabiltities.Count >= 1 ? NgramProbabiltities[0] : ("", 0);
             CreateBlock.SecondaryCorrection = NgramProbabiltities.Count >= 2 ? NgramProbabiltities[2] : ("", 0);
             CreateBlock.TriCorrection = NgramProbabiltities.Count >= 3 ? NgramProbabiltities[3] : ("", 0);
 
@@ -63,7 +61,7 @@ public class Scale
             CreateBlock.TriCompletion = mostPb.Count >= 3 ? mostPb[2] : ("", 0);
 
             return CreateBlock;
-            
+
         }
         else return answersblock(Currentstate, NgramProbabiltities, CurrentWord, LevenshteinProbabiltities);
     }
@@ -76,12 +74,12 @@ public class Scale
         Answersblock block = new();
         if (PreFixList.Count > 0)
         {
-           
+
 
             block.Completion = (PreFixList.FirstOrDefault(), 7);
 
-            
-            block.SecondaryCompletion = PreFixList.Count >=2 ? (PreFixList[1], 7) : ("",0);
+
+            block.SecondaryCompletion = PreFixList.Count >= 2 ? (PreFixList[1], 7) : ("", 0);
             block.TriCompletion = PreFixList.Count >= 3 ? (PreFixList[2], 7) : ("", 0);
 
             block.Correction = PreFixList.Count >= 4 ? (PreFixList[3], 7) : ("", 0);
@@ -92,7 +90,7 @@ public class Scale
         return block;
     }
 
-    public List<(string W, float PB)> MostProbable(List<(string , float)> LevenshteinProbabiltities , List<(string, float)> NgramProbabiltities , string CurrentWord)
+    public List<(string W, float PB)> MostProbable(List<(string, float)> LevenshteinProbabiltities, List<(string, float)> NgramProbabiltities, string CurrentWord)
     {
 
         LevenshteinProbabiltities.OrderByDescending(F => F.Item2);
@@ -104,18 +102,18 @@ public class Scale
 
         foreach (var (wordL, PL) in LevenshteinProbabiltities)
         {
-            foreach(var (wordN , PN) in NgramProbabiltities)
+            foreach (var (wordN, PN) in NgramProbabiltities)
             {
-                if(wordL == wordN)
+                if (wordL == wordN)
                 {
                     highestProbabilities.Add((wordN, PN * PL));
                 }
             }
         }
-        
+
         if (highestProbabilities.Count == 0)
         {
-            foreach(var (word,pp) in LevenshteinProbabiltities)
+            foreach (var (word, pp) in LevenshteinProbabiltities)
             {
                 highestProbabilities.Add((word, pp));
             }
@@ -127,14 +125,14 @@ public class Scale
 
 
     }
-    private (string,float) checkbysound(string CurrentWord)
+    private (string, float) checkbysound(string CurrentWord)
     {
         MetaPhone CheckBySound = new MetaPhone();
         return CheckBySound.ChechWord(CurrentWord);
     }
     private void DeleteRepetitions(List<(string, float)> TrieList)
     {
-        for (int i = TrieList.Count - 2; i >=0; i--)
+        for (int i = TrieList.Count - 2; i >= 0; i--)
         {
             if (TrieList[i].Item1 == TrieList[i + 1].Item1)
             {
@@ -142,7 +140,7 @@ public class Scale
                 TrieList.RemoveAt(i + 1);
             }
         }
-        
+
     }
     private void DeleteRepetitions(List<string> TrieList)
     {

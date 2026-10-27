@@ -1,15 +1,9 @@
 ﻿using Microsoft.Data.Sqlite;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
-using System.Text;
-using System.Text.Json;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using System.Xml;
 
 
 class GetData
@@ -47,18 +41,18 @@ class GetData
     static public Dictionary<string, int> WordID = dicwordid.Value;
 
     static public Trie trie
-    { 
-        get { return _tr.Value; } 
+    {
+        get { return _tr.Value; }
 
 
         set { }
     }
 
 
-    static  private  Dictionary<int , (string , long)> GetWordUnit(string NameOfTable , string path)
+    static private Dictionary<int, (string, long)> GetWordUnit(string NameOfTable, string path)
     {
 
-        
+
 
         // NameOfTheTable = WinTable
         var WordUnitData = new Dictionary<int, (string, long)>();
@@ -86,7 +80,7 @@ class GetData
 
                 }
                 Reader.Close();
-   
+
             }
 
         }
@@ -99,7 +93,7 @@ class GetData
         return WordUnitData;
     }
 
-    static public Dictionary<string,int> getwordid(Dictionary<int, (string, long)> Dictioary)
+    static public Dictionary<string, int> getwordid(Dictionary<int, (string, long)> Dictioary)
     {
         Dictionary<string, int> dic = new();
         if (Dictioary != null)
@@ -113,7 +107,7 @@ class GetData
         return dic;
     }
 
-    static public  Trie GetTrieData(string NameOfTable, string path)
+    static public Trie GetTrieData(string NameOfTable, string path)
     {
         //WinTableTrie
         try
@@ -129,14 +123,14 @@ class GetData
                 var trie = System.Text.Json.JsonSerializer.Deserialize<Trie>(gzip);
                 NullifyEmptyChildren(trie);
 
-                
+
                 return trie;
             }
             reader.Close();
             //connection.Close();
-            
+
         }
-        catch(SqliteException ex)
+        catch (SqliteException ex)
         {
             Console.WriteLine(ex.Message);
         }
@@ -156,7 +150,7 @@ class GetData
             NullifyEmptyChildren(child);
     }
 
-    private static void PinListsIntoFile(List<string> Phrases , string PinListsPath)
+    private static void PinListsIntoFile(List<string> Phrases, string PinListsPath)
     {
 
 
@@ -196,7 +190,7 @@ class GetData
             Console.WriteLine(ex.Message);
         }
     }
-    private static byte[]  GetImageBytes(BitmapSource bmp)
+    private static byte[] GetImageBytes(BitmapSource bmp)
     {
         var encoder = new PngBitmapEncoder();
         encoder.Frames.Add(BitmapFrame.Create(bmp));
@@ -240,21 +234,21 @@ class GetData
 
 
 
-                    using (var command = new SqliteCommand(TableConnection, connection))
+                using (var command = new SqliteCommand(TableConnection, connection))
+                {
+                    foreach (var pic in Picture)
                     {
-                        foreach (var pic in Picture)
-                        {
                         //var Jsonstring = System.Text.Json.JsonSerializer.Serialize(pic);
                         byte[] jsonbyte = GetImageBytes(pic);
                         command.Parameters.AddWithValue("@Picture", jsonbyte);
                         command.ExecuteNonQuery();
                         command.Parameters.Clear();
-                        }
                     }
-                
+                }
+
             }
         }
-        
+
         catch (SqliteException ex)
         {
             Console.WriteLine(ex.Message);
@@ -266,7 +260,7 @@ class GetData
         // Table name : PicPinList
 
         List<BitmapSource> images = new();
-      
+
         try
         {
             using var connection = new SqliteConnection(path);
@@ -282,7 +276,7 @@ class GetData
                 images.Add(image);
             }
             reader.Close();
-            
+
 
         }
         catch (SqliteException ex)
@@ -294,7 +288,7 @@ class GetData
 
     public static void UpdatePinItemData(List<string> Phrases)
     {
-        
+
         try
         {
 
@@ -331,7 +325,7 @@ class GetData
         }
     }
 
-    public static List<string> GetPinListsItems(string TableName , string PinListsPath)
+    public static List<string> GetPinListsItems(string TableName, string PinListsPath)
     {
         var PinLists = new List<string>();
 
@@ -373,7 +367,7 @@ class GetData
 
 }
 
-public class  WordRepository
+public class WordRepository
 {
 
     private const string WIDtable = "WinTable";
@@ -450,7 +444,7 @@ public class  WordRepository
             var X = 0;
             _getWordIdCmd.Parameters["@word"].Value = word;
             var result = _getWordIdCmd.ExecuteScalar();
-            if (result != null && result !=DBNull.Value)
+            if (result != null && result != DBNull.Value)
             {
                 X = Convert.ToInt32(result);
                 return X;

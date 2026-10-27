@@ -1,8 +1,7 @@
 ﻿using System.Runtime.InteropServices;
-using SW= System.Windows; // Or use whatever point class you like for the implicit cast operator
 namespace WinboardDesgin
 {
-    public class MousePosition 
+    public class MousePosition
     {
         [StructLayout(LayoutKind.Sequential)]
         public struct POINT
@@ -29,7 +28,7 @@ namespace WinboardDesgin
             return lpPoint;
         }
 
-    } 
+    }
 }
- 
+
 

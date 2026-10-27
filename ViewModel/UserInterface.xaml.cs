@@ -1,19 +1,10 @@
-﻿using K4os.Compression.LZ4.Engine;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
-using System.Drawing;
 using System.Linq;
-using System.Net.NetworkInformation;
-using System.Numerics;
-using System.Security.Cryptography.Xml;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls.Primitives;
 using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Interop;
@@ -22,58 +13,57 @@ using System.Windows.Media.Imaging;
 using Winboard.ViewModel.triggers;
 using WinboardDesgin;
 using WindowsInput;
-using static System.Net.Mime.MediaTypeNames;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using formS = System.Windows.Forms;
 using WPF = System.Windows.Input;
 namespace Winboard.ViewModel
-{ 
-    public partial class UI :System.Windows. Window
+{
+    public partial class UI : System.Windows.Window
     {
 
 
         InputSimulator sime = new();
         private bool _IsWpfWindowHidden = false;
-       
+
         ClipboardMonitor clipboardmonitor;
 
         formS.Cursor cursor;
 
         HoloParticles holoParticles = new(450, 30);
-        
+
         private GlobalHotKey W_Alt_hotkey;
 
         List<string> PinList = GetData.PinLists;
         List<BitmapSource> pictures = GetData.PicturesPinLists;
-        Gettext StartCaptureText=new();
+        Gettext StartCaptureText = new();
 
         public UI()
         {
             InitializeComponent();
             DataContext = this;
-         
-            entries = new  ObservableCollection<ItemViewModel>();
+
+            entries = new ObservableCollection<ItemViewModel>();
             this.WindowStartupLocation = WindowStartupLocation.Manual;
             this.Left = (SystemParameters.VirtualScreenWidth - this.Width) * 0.5;
             this.Top = SystemParameters.VirtualScreenTop + 5;
 
             this.PrimaryReactangle.Text = "hello";
             this.SecondaryReactangle.Text = "Type";
-            this.TriReactangle.Text = "writ";
-            
+            this.TriReactangle.Text = "nice";
+
             this.Focusable = false;
             SourceInitialized += (s, e) => new Blureffect().EnableBlur(this);
 
             SourceInitialized += MainWindow_SourceInitialized;
 
             SourceInitialized += (s, e) => Wincorner.ChangeCornerStyle(this, Wincorner.CornerStyle.Round);
+            
 
 
 
-            AddPreviousPinItem(PinList , pictures);
+            AddPreviousPinItem(PinList, pictures);
 
             ClipboardPopup.MouseMove += new WPF.MouseEventHandler(ClipMenu_MouseMove);
-           
+
             holoParticles.AddParticles(this);
             StartCaptureText.intextfield();
         }
@@ -91,16 +81,16 @@ namespace Winboard.ViewModel
 
         }
 
-       
+
 
         private IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
         {
             // is this a HotKey ?
 
-            var MSG =(WindowMessage)msg;
-            
+            var MSG = (WindowMessage)msg;
+
             HideAndShowWindow(MSG);
-            
+
             return IntPtr.Zero;
         }
 
@@ -111,25 +101,25 @@ namespace Winboard.ViewModel
             {
 
                 this.Hide();
-                
+
                 ClipboardPopup.IsOpen = false;
                 _IsWpfWindowHidden = true;
-             
+
             }
 
             else if (MSG == WindowMessage.WM_HotKey && _IsWpfWindowHidden == true)
             {
-               
+
                 this.Show();
                 _IsWpfWindowHidden = false;
-            
+
             }
         }
 
         private void holdUI(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            if(ClipboardPopup.IsMouseOver == false)
-            DragMove();
+            if (ClipboardPopup.IsMouseOver == false)
+                DragMove();
 
             ShiftWindowOntoScreenHelper.ShiftWindowOntoScreen(this);
         }
@@ -144,7 +134,7 @@ namespace Winboard.ViewModel
             }
 
         }
-       private  ObservableCollection<ItemViewModel> entries;
+        private ObservableCollection<ItemViewModel> entries;
         public ObservableCollection<ItemViewModel> Entries
         {
             get { return entries; }
@@ -157,13 +147,13 @@ namespace Winboard.ViewModel
 
             if (System.Windows.Clipboard.ContainsText())
             {
-                
+
                 string usercopy = System.Windows.Clipboard.GetText();
 
                 //prevent adding the same copy to the list
 
-               if (  !Entries.Any(f=>f.UserCopy == usercopy) )
-                Entries.Insert( 0 ,new ItemViewModel { UserCopy = usercopy , IsChecked = false ,Datatype  = typeof(string)});
+                if (!Entries.Any(f => f.UserCopy == usercopy))
+                    Entries.Insert(0, new ItemViewModel { UserCopy = usercopy, IsChecked = false, Datatype = typeof(string) });
 
             }
             else if (System.Windows.Clipboard.ContainsImage())
@@ -174,7 +164,7 @@ namespace Winboard.ViewModel
                 {
                     Entries.Insert(0, new ItemViewModel { IsChecked = false, UserImage = userimage, Datatype = typeof(BitmapSource) });
                 }
-                
+
                 _SkipScondCopy = !_SkipScondCopy;
 
             }
@@ -222,11 +212,11 @@ namespace Winboard.ViewModel
         private void ListBoard_MouseMove(object sender, WPF.MouseEventArgs e)
         {
 
-            
+
 
             if (e.LeftButton == MouseButtonState.Pressed)
             {
-                
+
                 if (OnBoardList == false) OnBoardList = true;
 
             }
@@ -238,7 +228,7 @@ namespace Winboard.ViewModel
 
             if (e.LeftButton == MouseButtonState.Pressed && OnBoardList == false)
             {
-                
+
                 var _finalpos = GetMousePos();
                 var Dx = _finalpos.X - _MouseInitialPos.X;
                 var Dy = _finalpos.Y - _MouseInitialPos.Y;
@@ -254,21 +244,21 @@ namespace Winboard.ViewModel
 
         private void TrashIcon_click(object sender, RoutedEventArgs e)
         {
-            
+
             var ItemIdx = this.UserCopiesList.SelectedIndex;
 
             Entries.RemoveAt(ItemIdx);
         }
 
-        private void AddPreviousPinItem(List<string> Items , List<BitmapSource> images)
+        private void AddPreviousPinItem(List<string> Items, List<BitmapSource> images)
         {
-            foreach(var i in Items)
+            foreach (var i in Items)
             {
-                Entries.Add(new ItemViewModel { UserCopy = i , IsChecked = true , Datatype=typeof(string)});
+                Entries.Add(new ItemViewModel { UserCopy = i, IsChecked = true, Datatype = typeof(string) });
             }
             foreach (var i in images)
             {
-                Entries.Add(new ItemViewModel { UserImage = i, IsChecked = true , Datatype = typeof(BitmapSource)});
+                Entries.Add(new ItemViewModel { UserImage = i, IsChecked = true, Datatype = typeof(BitmapSource) });
             }
 
         }
@@ -282,7 +272,7 @@ namespace Winboard.ViewModel
                 ItemString.IsChecked = true;
             }
 
-            else if (ItemString.IsChecked ==false)
+            else if (ItemString.IsChecked == false)
             {
                 ItemString.IsChecked = false;
             }
@@ -291,7 +281,7 @@ namespace Winboard.ViewModel
         }
         private void ClearAll_click(object sender, RoutedEventArgs e)
         {
-            
+
             for (int i = Entries.Count - 1; i >= 0; i--)
             {
 
@@ -359,7 +349,7 @@ namespace Winboard.ViewModel
         {
             var L = new List<string>();
             var L2 = new List<BitmapSource>();
-            foreach(var item in Entries)
+            foreach (var item in Entries)
             {
                 if (item.IsChecked == true)
                 {
@@ -402,7 +392,7 @@ namespace Winboard.ViewModel
                 System.Windows.Clipboard.Clear();
             }
 
-            else if(obj.Datatype == typeof(BitmapSource))
+            else if (obj.Datatype == typeof(BitmapSource))
             {
                 var Image = obj.UserImage;
                 System.Windows.Clipboard.SetImage(Image);

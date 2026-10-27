@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Windows.Forms;
 
 namespace Winboard.ViewModel.triggers
@@ -24,7 +22,7 @@ namespace Winboard.ViewModel.triggers
 
         private const int Alt_Key = 0x1;
 
-        public GlobalHotKey(Keys key , Keys modifiers , IntPtr handle , int id)
+        public GlobalHotKey(Keys key, Keys modifiers, IntPtr handle, int id)
         {
             this.key = (int)key;
             this.handle = handle;
@@ -32,19 +30,19 @@ namespace Winboard.ViewModel.triggers
             if (modifiers.HasFlag(Keys.Alt)) this.Modifier = Alt_Key;
         }
 
-        public bool register() => RegisterHotKey(handle,  id, Modifier,  key);
+        public bool register() => RegisterHotKey(handle, id, Modifier, key);
         public bool Unregister() => UnregisterHotKey(handle, id);
 
         public bool Dispose() => Unregister();
 
 
-                   
+
     }
 
     public enum WindowMessage : uint
     {
         WM_HotKey = 0x0312,
-        WM_PASTE  =  0x0302
+        WM_PASTE = 0x0302
     }
 
 }

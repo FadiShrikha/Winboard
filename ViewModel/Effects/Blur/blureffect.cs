@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Reflection.Metadata;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Windows;
 using System.Windows.Interop;
 
@@ -40,7 +36,7 @@ namespace Winboard
         public void EnableBlur(Window window)
         {
 
-            IntPtr Hand= new WindowInteropHelper(window).Handle;
+            IntPtr Hand = new WindowInteropHelper(window).Handle;
             var accent = new AccentPolicy();
             accent._AccentState = 4;
             var accentstructuresize = Marshal.SizeOf(accent);
@@ -52,9 +48,9 @@ namespace Winboard
             accentdata.SizeOfData = accentstructuresize;
             accentdata._Data = accentptr;
 
-            SetWindowCompositionAttribute(Hand,ref accentdata);
+            SetWindowCompositionAttribute(Hand, ref accentdata);
             Marshal.FreeHGlobal(accentptr);
         }
     }
-    }
+}
 

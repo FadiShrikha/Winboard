@@ -1,49 +1,45 @@
-﻿using System.Windows;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Windows;
 
 namespace Winboard
 {
     using System;
-    using System.Diagnostics;
     using System.Drawing;
     using System.Windows.Forms;
-    using System.Windows.Media.Animation;
 
     public static class ShiftWindowOntoScreenHelper
     {
-        
+
         public static void ShiftWindowOntoScreen(Window window)
         {
 
             if (window.Top < SystemParameters.VirtualScreenTop)
             {
 
-                while(window.Top < SystemParameters.VirtualScreenTop + 20)
-                window.Top += 1;
+                while (window.Top < SystemParameters.VirtualScreenTop + 20)
+                    window.Top += 1;
 
             }
 
-            if (window.Left < SystemParameters.VirtualScreenLeft )
+            if (window.Left < SystemParameters.VirtualScreenLeft)
             {
 
-                while (window.Left <SystemParameters.VirtualScreenLeft+20)
-                window.Left += 1;
+                while (window.Left < SystemParameters.VirtualScreenLeft + 20)
+                    window.Left += 1;
 
             }
-           
+
 
             if (window.Left + window.Width > SystemParameters.VirtualScreenLeft + SystemParameters.VirtualScreenWidth)
             {
-                while(window.Left + window.Width > SystemParameters.VirtualScreenLeft + SystemParameters.VirtualScreenWidth-20)
+                while (window.Left + window.Width > SystemParameters.VirtualScreenLeft + SystemParameters.VirtualScreenWidth - 20)
                     window.Left -= 1;
 
             }
 
             if (window.Top + window.Height > SystemParameters.VirtualScreenTop + SystemParameters.VirtualScreenHeight)
             {
-                while (window.Top + window.Height > SystemParameters.VirtualScreenTop + SystemParameters.VirtualScreenHeight-20)
+                while (window.Top + window.Height > SystemParameters.VirtualScreenTop + SystemParameters.VirtualScreenHeight - 20)
                     window.Top -= 1;
             }
 
@@ -53,7 +49,7 @@ namespace Winboard
 
                 foreach (var taskBar in taskBarLocation)
                 {
-                     Rectangle windowRect = new Rectangle((int)window.Left, (int)window.Top, (int)window.Width, (int)window.Height);
+                    Rectangle windowRect = new Rectangle((int)window.Left, (int)window.Top, (int)window.Width, (int)window.Height);
 
                     int avoidInfiniteLoopCounter = 25;
                     while (windowRect.IntersectsWith(taskBar))
@@ -82,7 +78,7 @@ namespace Winboard
                         }
 
                         if (intersection.Height < window.Height
- 
+
                             || taskBar.Contains(windowRect))
                         {
                             if (taskBar.Top == 0)
@@ -103,7 +99,7 @@ namespace Winboard
 
         private static List<Rectangle> GetTaskBarLocationPerScreen()
         {
-            
+
             List<Rectangle> dockedRects = new List<Rectangle>();
             foreach (var screen in Screen.AllScreens)
             {

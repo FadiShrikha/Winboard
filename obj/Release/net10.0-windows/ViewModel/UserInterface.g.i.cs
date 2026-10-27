@@ -166,7 +166,7 @@ namespace Winboard.ViewModel {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/Winboard;component/viewmodel/userinterface.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/Winboard;V1.0.0.0;component/viewmodel/userinterface.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\..\..\ViewModel\UserInterface.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);

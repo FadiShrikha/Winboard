@@ -8,7 +8,7 @@ class Assembly
     Scale _scale = new();
     NGramModel _nGramModel = new();
 
-    
+
     public Scale.Answersblock SetOrder(string BasicLine, string CurrentWord)
     {
         if (string.IsNullOrEmpty(BasicLine))
@@ -22,9 +22,9 @@ class Assembly
         .Where(s => s.Length > 0)
         .ToList();
 
-        var NgramList = _nGramModel.NgramAnswer(string.Join(" ", TokenizeLine.TakeWhile(F => F != CurrentWord)), 3 , 10);
+        var NgramList = _nGramModel.NgramAnswer(string.Join(" ", TokenizeLine.TakeWhile(F => F != CurrentWord)), 3, 10);
 
-        if ((BasicLine != null && CurrentWord !=null) && (CurrentWord == "" || CurrentWord == " "))
+        if ((BasicLine != null && CurrentWord != null) && (CurrentWord == "" || CurrentWord == " "))
         {
 
             if (NgramList.Count > 0)
@@ -39,21 +39,21 @@ class Assembly
             return Prefix(NgramList, CurrentWord);
         }
 
-        
+
 
         return new();
-        
+
     }
     public Scale.Answersblock Completion(List<(string, float)> NgramList, string CurrentWord)
     {
-        var AnswersBlock = _scale.answersblock(1,NgramList);
+        var AnswersBlock = _scale.answersblock(1, NgramList);
 
         return AnswersBlock;
     }
 
     public Scale.Answersblock Prefix(List<(string, float)> NgramList, string CurrentWord)
     {
-        
+
 
         PreFix.PreFixTrie _prefixtrie = new();
 
@@ -61,8 +61,8 @@ class Assembly
         var Candidate = _prefixtrie.GetCandidate(CurrentWord);
 
         if (Candidate.Count != 0) return _scale.answersblock(2, Candidate);
-        else 
-        return Correction(NgramList, CurrentWord);
+        else
+            return Correction(NgramList, CurrentWord);
 
 
 
@@ -74,7 +74,7 @@ class Assembly
         LevenshteinProbabiltities spellingChecker = new();
         var Leve = spellingChecker.Correct(CurrentWord);
 
-        var AnswersBlock = _scale.answersblock(3 ,NgramList , CurrentWord , Leve);
+        var AnswersBlock = _scale.answersblock(3, NgramList, CurrentWord, Leve);
 
         return AnswersBlock;
     }

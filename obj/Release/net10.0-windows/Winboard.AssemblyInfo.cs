@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Winboard")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b564c17aafa05128d2aea36c8ae0d3ee071a4841")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+892e70a9399c9caa67fbe9ae8eb70ecd1366d3d6")]
 [assembly: System.Reflection.AssemblyProductAttribute("Winboard")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Winboard")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

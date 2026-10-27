@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Windows;
 
 class PreFix
 {
@@ -51,8 +48,8 @@ class PreFix
 
         static public Dictionary<string, int> diction = GetData.WordID;
 
-        static public readonly Lazy <PreFixTrie> tr = new(()=> buildtire(diction));
-        static public  PreFixTrie trie => tr.Value;
+        static public readonly Lazy<PreFixTrie> tr = new(() => buildtire(diction));
+        static public PreFixTrie trie => tr.Value;
 
 
         WordRepository database = new();
@@ -67,7 +64,7 @@ class PreFix
         {
             var currentNode = _root;
             var result = currentNode;
-  
+
             foreach (var c in s)
             {
                 currentNode = currentNode.FindChildNode(c);
@@ -114,7 +111,7 @@ class PreFix
         {
             if (Search(s))
             {
-                var node =Prefix(s).FindChildNode('$');
+                var node = Prefix(s).FindChildNode('$');
 
                 while (node.IsLeaf())
                 {
@@ -135,7 +132,7 @@ class PreFix
             }
 
 
-            Node nodes =Prefix(word);
+            Node nodes = Prefix(word);
 
             string matched = word.Substring(0, Math.Min(word.Length, nodes.Depth));
             foreach (var node in nodes.Children)
@@ -146,7 +143,7 @@ class PreFix
 
 
                 if (node.Children.Any(f => f.Value != '$')) SetPreFixList(current, l);
-                
+
                 l.Add(current);
             }
 
@@ -156,11 +153,11 @@ class PreFix
 
         public List<string> GetPreFixList(string word)
         {
-            
+
             List<string> l = new();
             SetPreFixList(word, l);
 
-            
+
             return l;
         }
 
@@ -188,7 +185,7 @@ class PreFix
 
         }
 
-        private static PreFixTrie buildtire(Dictionary<string,int> dic)
+        private static PreFixTrie buildtire(Dictionary<string, int> dic)
         {
             List<string> l = new();
             foreach (var s in dic)

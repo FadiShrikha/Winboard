@@ -1,7 +1,6 @@
 ﻿
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Windows.Documents;
 
@@ -21,7 +20,7 @@ public class Trie
         Childern[key] = child;
     }
 }
-public  class NGramModel
+public class NGramModel
 
 {
     public static Trie _trie = GetData.trie;
@@ -31,12 +30,12 @@ public  class NGramModel
     public List<int> tokenize(string Context)
     {
 
-    var context = Context.ToLower()
-            .Split([' ', '%', '\"', '|', '{', '}', '\'', '\\', '?', ',', '<', '>', '?', '@', '#', '~', '_', '!', '.'], StringSplitOptions.RemoveEmptyEntries)
-            .Where(s => s.Length > 0)
-            .Select(F => wordid.TryGetValue(F, out int id) ? id : 0)
-            .Where(id => id != 0)
-            .ToList();
+        var context = Context.ToLower()
+                .Split([' ', '%', '\"', '|', '{', '}', '\'', '\\', '?', ',', '<', '>', '?', '@', '#', '~', '_', '!', '.'], StringSplitOptions.RemoveEmptyEntries)
+                .Where(s => s.Length > 0)
+                .Select(F => wordid.TryGetValue(F, out int id) ? id : 0)
+                .Where(id => id != 0)
+                .ToList();
 
         return context;
     }
@@ -58,12 +57,12 @@ public  class NGramModel
         if (trie?.Childern == null) return Scorelist;
         if (Context.Count == 0)
         {
-            
-            var CandidatesWordsList = new List<(int ID , int count)>();
-            CandidatesWordsList = trie.Childern.Select(F=>(F.Key,F.Value.Count)).Take(10).ToList();
-            foreach(var (ID , Count) in CandidatesWordsList)
+
+            var CandidatesWordsList = new List<(int ID, int count)>();
+            CandidatesWordsList = trie.Childern.Select(F => (F.Key, F.Value.Count)).Take(10).ToList();
+            foreach (var (ID, Count) in CandidatesWordsList)
             {
-                var Score = (float)Count/trie.Count*backoff ;
+                var Score = (float)Count / trie.Count * backoff;
                 Scorelist.Add((ID, Score));
             }
             return Scorelist;
@@ -75,12 +74,12 @@ public  class NGramModel
         if (trie.Childern == null || !trie.Childern.TryGetValue(Head, out Trie value)) return new();
 
 
-        return Topk(value, Context.GetRange(1, Context.Count - 1),backoff);;
+        return Topk(value, Context.GetRange(1, Context.Count - 1), backoff); ;
     }
-    public List<(int, float)> Predict(Trie searcher, List<int> Context, int Ngram , float backoff = 1f)
+    public List<(int, float)> Predict(Trie searcher, List<int> Context, int Ngram, float backoff = 1f)
     {
 
- 
+
 
         var result = Topk(searcher, Context, backoff);
         if (result.Count > 0)
@@ -90,10 +89,10 @@ public  class NGramModel
 
         if (Context.Count == 0) return result;
 
-        return Predict(searcher, Context.GetRange(1, Context.Count - 1), Ngram , backoff*=0.4f);
+        return Predict(searcher, Context.GetRange(1, Context.Count - 1), Ngram, backoff *= 0.4f);
     }
-    
-    
+
+
 
     public static void BurnThisNode(int Limit, Trie MainTrie)
     {
@@ -119,7 +118,7 @@ public  class NGramModel
         }
     }
 
-    public List<(string, float)> NgramAnswer(string Context ,int Ngram, int MaxAnswers )
+    public List<(string, float)> NgramAnswer(string Context, int Ngram, int MaxAnswers)
 
     {
 
@@ -138,9 +137,9 @@ public  class NGramModel
     }
 
 
-    private List<(string,float)> Converttoword(List<(int,float)> L)
+    private List<(string, float)> Converttoword(List<(int, float)> L)
     {
-         WordRepository database = new();
+        WordRepository database = new();
 
         var r = new List<(string, float)>();
         r = L.Select(S => (database.GetWordFromId(S.Item1), S.Item2)).ToList();
@@ -178,7 +177,7 @@ public  class NGramModel
         Trie trie = new();
 
         foreach (var List in Gram)
-        { 
+        {
             if (i++ % 10000 == 0 || i == tot - 2)
 
                 Console.Write($"\u001b[2K\r {i++}insert in the tree out of {tot} ||{((i + 1) * 100) / tot} ");

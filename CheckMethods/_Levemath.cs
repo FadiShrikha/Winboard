@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
- class LevenshteinProbabiltities
+class LevenshteinProbabiltities
 {
 
     const string AtoZ = "abcdefghijklmnopqrstuvwxyz";
@@ -46,27 +46,27 @@ using System.Linq;
         {
             foreach (var c in AtoZ)
             {
-                    inserts.Add(s.a + c + s.b);
+                inserts.Add(s.a + c + s.b);
             }
         }
 
         List<string> WordsList = deletes.Concat(transposes).Concat(replaces).Concat(inserts).ToList();
-        
-        
-        return FilterUnExistWords(WordsList) ;
+
+
+        return FilterUnExistWords(WordsList);
     }
     List<string> KnownEdits2(string word)
     {
 
-        var l = new List<string >();
+        var l = new List<string>();
         var edit1 = Edits1(word);
         foreach (var e1 in edit1)
             foreach (var e2 in Edits1(e1))
-                    l.Add(e2);
+                l.Add(e2);
         return l;
-        
+
     }
-    List<(string , float)> Known(List<string> words)
+    List<(string, float)> Known(List<string> words)
     {
         var l = new List<(string, float)>();
 
@@ -80,7 +80,7 @@ using System.Linq;
             else
                 l.Add((word, 0f));
 
-            
+
             foreach (var W in Edits1(word))
             {
                 l.Add((W, 0.07f));
@@ -92,14 +92,14 @@ using System.Linq;
 
         }
 
-        return l.OrderByDescending(x=> x.Item2).Take(10).ToList();
+        return l.OrderByDescending(x => x.Item2).Take(10).ToList();
     }
 
-    private void GetFinalScore(List<(string,float)> candidate)
+    private void GetFinalScore(List<(string, float)> candidate)
     {
         const float Lambda = 0.03f;
         var MaxFrquncy = GetFrq("the");
-        for(int i =0; i < candidate.Count; i++)
+        for (int i = 0; i < candidate.Count; i++)
         {
             var CW = candidate[i];
             var GF = GetFrq(CW.Item1);
@@ -109,16 +109,16 @@ using System.Linq;
             candidate[i] = ((CW.Item1, S));
         }
     }
-    public List<(string,float)> Correct(string word)
+    public List<(string, float)> Correct(string word)
     {
 
-        
+
         var candidateWords = this.Known(new List<string> { word });
 
-       candidateWords = candidateWords
-                        .OrderByDescending(w => GetFrq(w.Item1))
-                        .Take(10)
-                        .ToList();
+        candidateWords = candidateWords
+                         .OrderByDescending(w => GetFrq(w.Item1))
+                         .Take(10)
+                         .ToList();
 
         GetFinalScore(candidateWords);
 
@@ -138,13 +138,13 @@ using System.Linq;
                 return true;
             }
         }
-        
+
         return false;
     }
     private List<string> FilterUnExistWords(List<string> words)
     {
         Dictionary<string, int> dicword = GetData.WordID;
-        
+
         return words.Where(f => dicword.TryGetValue(f, out int id) == true).ToList();
     }
     private long GetFrq(string word)

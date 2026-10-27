@@ -1,10 +1,9 @@
 ﻿using System;
-using Winboard;
 
 class Program
 {
     public static Winboard.ViewModel.UI WPFWindow;
-    
+
 
     [STAThread]
     static void Main(string[] args)
@@ -15,7 +14,7 @@ class Program
 
         app.Run(WPFWindow);
 
-       
+
 
     }
 }
