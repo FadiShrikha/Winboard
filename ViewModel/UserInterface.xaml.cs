@@ -49,7 +49,7 @@ namespace Winboard.ViewModel
             this.PrimaryReactangle.Text = "hello";
             this.SecondaryReactangle.Text = "Type";
             this.TriReactangle.Text = "nice";
-
+             
             this.Focusable = false;
             SourceInitialized += (s, e) => new Blureffect().EnableBlur(this);
 
